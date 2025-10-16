@@ -7,8 +7,16 @@ fetch('https://skolmaten.se/api/4/rss/day/alla-skolor-linkoping-2?locale=sv')
     const items = data.querySelectorAll("item");
     let html = '';
     items.forEach(item => {
-      const title = item.querySelector("title").textContent;
-      html += `<h2>${title}</h2><p>${item.querySelector("description").textContent}</p>`;
+      const description = item.querySelector("description").textContent;
+      const meals = description.split('<br/>'); // Dela upp texten vid <br/>
+
+      html += `<h2>${item.querySelector("title").textContent}</h2>`; // Rubrik för dagen
+      
+      meals.forEach(meal => {
+        if (meal.trim() !== '') { // Ignorera tomma rader
+          html += `<p>${meal.trim()}</p>`;
+        }
+      });
     });
     document.getElementById('matsedel').innerHTML = html;
   });
@@ -17,5 +25,9 @@ fetch('https://skolmaten.se/api/4/rss/day/alla-skolor-linkoping-2?locale=sv')
   /* Här kan du justera avståndet */
   h2 {
     margin-bottom: 20px; /* Mer utrymme under rubriken */
+  }
+  p {
+    margin-bottom: 15px; /* Avstånd mellan maträtterna */
+    font-size: 1.2em; /* Större text */
   }
 </style>
